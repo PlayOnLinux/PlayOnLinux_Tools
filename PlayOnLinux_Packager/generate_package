@@ -1,0 +1,72 @@
+#!/bin/bash
+
+VERSION=$1
+DIRNAME="base"
+DIRECTORY="$HOME/git/$DIRNAME"
+FINAL="$HOME/www/script_files/PlayOnLinux"
+
+if [ "$VERSION" = "" ]
+then
+	echo "You need to specify a version"
+	exit	
+fi
+echo "Welcome to PlayOnLinux builder script"
+echo "Building $VERSION from GIT"
+# Generate control file
+echo "Generating control file"
+cd "$DIRECTORY/DEBIAN"
+cat << EOF > control
+Package: playonlinux
+Version: $VERSION
+Section: base
+Priority: optional
+Architecture: all
+Depends: unzip, wine, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
+Maintainer: Tinou 
+Description: PlayOnLinux is a front-end for wine. It permits you to install Windows Games and softwares on Linux.
+EOF
+
+# Cloning GIT
+echo "Cloning GIT"
+cd "$DIRECTORY/usr/share"
+git clone git://github.com/PlayOnLinux/PlayOnLinux_3.git
+mv PlayOnLinux_3 playonlinux
+cd playonlinux 
+rm -rf .git
+
+# Making .tar.gz
+echo "Making PlayOnLinux_$VERSION.tar.gz generic package"
+cd "$DIRECTORY/usr/share"
+fakeroot tar -czvf PlayOnLinux_$VERSION.tar.gz playonlinux > /dev/null
+
+# Moving .tar.gz
+echo "Moving PlayOnLinux_$VERSION.tar.gz"
+mkdir -p $FINAL/$VERSION
+mv PlayOnLinux_$VERSION.tar.gz "$FINAL/$VERSION"
+
+# Making changelog
+echo "Updating changelog"
+cp "$DIRECTORY/usr/share/playonlinux/CHANGELOG" "$DIRECTORY/usr/share/doc/playonlinux/changelog"
+gzip "$DIRECTORY/usr/share/doc/playonlinux/changelog"
+
+# Making .deb
+echo "Building PlayOnLinux_$VERSION.deb"
+cd "$DIRECTORY"
+cd ..
+fakeroot dpkg-deb --build $DIRNAME
+
+# Moving .deb
+echo "Moving deb"
+mv $DIRNAME.deb "$FINAL/$VERSION/PlayOnLinux_$VERSION.deb"
+
+# Cleaning
+echo "Cleaning"
+rm "$DIRECTORY/DEBIAN/control"
+rm -rf "$DIRECTORY/usr/share/playonlinux"
+rm "$DIRECTORY/usr/share/doc/playonlinux/changelog.gz"
+
+# Updating website 
+echo "$VERSION" > "$HOME/www/script_files/version.php"
+
+echo ""
+echo "PlayOnLinux $VERSION is now available ! Don't forget to run make_repository"

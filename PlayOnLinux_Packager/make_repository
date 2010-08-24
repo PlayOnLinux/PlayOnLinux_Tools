@@ -1,0 +1,59 @@
+#!/bin/bash
+mk_repository()
+{
+	# 1 : Deb file
+	# 2 : Distribution
+	# 3 : Distribution version
+
+echo "Building repository for $2 $3 ..."	
+cat << FIN >> $HOME/www/deb/conf/distributions
+Origin: PlayOnLinux
+Label: PoL
+Suite: $2
+Codename: $2
+Version: $3
+Architectures: i386 amd64
+Components: main
+Description: PlayOnLinux permits you to install windows applications on linux thanks to wine - Visit : http://www.playonlinux.com/
+
+FIN
+
+	reprepro --ignore=undefinedtarget -b $HOME/www/deb includedeb $2 $1
+
+# Building .list files
+cat << EOF > $HOME/www/deb/playonlinux_$2.list
+deb http://deb.playonlinux.com/ $2 main
+EOF
+}
+
+
+mkdir -p $HOME/www/deb/incoming
+mkdir -p $HOME/www/deb/conf
+
+if [ -e "$HOME/www/deb/conf/distributions" ]
+then
+	rm $HOME/www/deb/conf/distributions
+	touch $HOME/www/deb/conf/distributions
+fi
+
+cd $HOME/www/deb/incoming/
+rm  -f PlayOnLinux_*
+VERSION=`wget -q -O- version http://www.playonlinux.com/script_files/version.php`
+echo "PlayOnLinux version : $VERSION"
+
+cp $HOME/www/script_files/PlayOnLinux/$VERSION/PlayOnLinux_$VERSION.deb ./
+cd $HOME/www/deb
+
+DEB_FILE="incoming/PlayOnLinux_$VERSION.deb"
+
+# Ubuntu
+mk_repository "$DEB_FILE" "lucid" "10.04"
+mk_repository "$DEB_FILE" "hardy" "8.04"
+mk_repository "$DEB_FILE" "intrepid" "8.10"
+mk_repository "$DEB_FILE" "jaunty" "9.04"
+mk_repository "$DEB_FILE" "karmic" "9.10"
+
+# Debian
+mk_repository "$DEB_FILE" "etch" "4.0"
+mk_repository "$DEB_FILE" "lenny" "5.0"
+mk_repository "$DEB_FILE" "squeeze" "6.0"
