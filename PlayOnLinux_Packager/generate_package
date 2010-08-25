@@ -32,6 +32,7 @@ cd "$DIRECTORY/usr/share"
 git clone git://github.com/PlayOnLinux/PlayOnLinux_3.git
 mv PlayOnLinux_3 playonlinux
 cd playonlinux 
+rm .gitignore
 rm -rf .git
 
 # Making .tar.gz
