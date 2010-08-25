@@ -1,7 +1,7 @@
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-- -- WINE BUILD 
+WINE BUILD 
 
 Information when exporting
 Change to be made in the script
@@ -17,20 +17,21 @@ A directory is created during compilation into the $HOME that run the script, th
 
 when everything is ended a .pol is placed into version/ 
 
-NEVER CREATE THE FILE /build/wine/patch ! NEVER! If you create this one, firstly I will kill you, secondly you will get lot of strange bug, thirdly I will shame you! Fourthly you will made lot of strange problems when script will try to sync with pol server
+NEVER CREATE THE FILE /build/wine/patch ! NEVER! If you create this one, firstly I will kill you, secondly you will get lot of strange bug, thirdly you will get shame on you! Fourthly you will get lot of strange problems when script will try to sync with pol server
 
 
 
-Install all lib requested by this page: http://wiki.winehq.org/Recommended_Packages
+You have to install all lib requested by this page: http://wiki.winehq.org/Recommended_Packages
 
 
 Any question should be directly asked to MulX / APLU <os2mule <at> gmail.com> 
+This script was never intented to be portable since I was alone for more than 2 years
 
-2010-08-25 14:30
+2010-08-25 14:45
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.6 (GNU/Linux)
 
-iD8DBQFMdQ07xJahRVskZuERAtqGAJ437FQW/ElEfF9JV0YYmMhSLJ45nQCffaYV
-ZZ19jEznXfEP6cjZDjnEsVk=
-=UQ9B
+iD8DBQFMdRCKxJahRVskZuERArQaAJ9k6OThsarcf7HkZerA9GNRdPWryQCeKbwV
+QNv/WkXaKet9saZioGQJoxI=
+=Z8UW
 -----END PGP SIGNATURE-----
