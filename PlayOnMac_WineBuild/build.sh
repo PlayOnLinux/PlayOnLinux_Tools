@@ -18,8 +18,6 @@ while read wineSrcArchFile
 do
 	echo "writing to  $wineSrcArchFile.build.out"
 	bash /build/wine/bNohup.sh $wineSrcArchFile &>  $wineSrcArchFile.build.out
-	echo -ne "0$wineSrcArchFile" | sed -e "s/.tar.bz2//" >>.cache
-	echo -e "\t0/$wineSrcArchFile.build.out\thome.aplu.fr\t70" >>.cache #gopher add file
 done < /tmp/wineSrcToBuild
 if [ -f /build/wine/patch ] ; then 
 	P_Start

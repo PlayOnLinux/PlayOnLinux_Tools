@@ -132,8 +132,7 @@ function webVersionList
 {
 	unsetProxy
 	wget -O/dev/null ftp://ibiblio.org/pub/linux/system/emulators/wine/ --no-remove-listing -q
-	cat .listing | awk '{print $9}' | grep wine | grep -v ".sign" |  grep -v ".diff" | sed 's/
-$//'  > /tmp/wineVersionList
+	cat .listing | awk '{print $9}' | grep wine | grep -v ".sign" |  grep -v ".diff" | sed 's/$//'  > /tmp/wineVersionList
 	rm -f .listing
 }
 function localVersionList
