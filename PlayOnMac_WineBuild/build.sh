@@ -10,7 +10,7 @@ source lib_build
 echo "getting list of version (from ibiblio.org)"
 versionToBuild
 cat requestedPriority /tmp/wineSrcToBuild > /tmp/foo
-mv /tmp/foo /tmp/wineSrcToBuild -f
+mv -f /tmp/foo /tmp/wineSrcToBuild
 rm /tmp/wineVersionList /tmp/localVersionList
 export buildState=-1
 echo "Done !"

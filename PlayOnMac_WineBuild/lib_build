@@ -16,7 +16,7 @@ function unsetProxy
 }
 function getSignFile
 {
-	setProxy
+	unsetProxy
 	wget ftp://ibiblio.org/pub/linux/system/emulators/wine/$1.sign -O $1.sign
 	if [ "$?" != "0" ] ; then
 		echo "sign file not downloaded for $1. Perhaps network error, sleeping for 2 minutes"
@@ -77,7 +77,9 @@ function build
 	buildState=8
 	[ $needPatch == true ]  && { shaTest $configureSha || return $buildState ; }
 	echo "build::Runing configure ..." 1>&2
-	if ! ./configure --prefix=$HOME/wb/version/$VERSION/wineversion/$VERSION/usr/ >&1
+	#
+	#if ! ./configure --prefix=$HOME/Desktop/wine/ >&1
+	if ! ./configure CPPFLAGS='-I/usr/X11/include' LIBS='-lGL -lGLU' LDFLAGS='-L/usr/X11/lib' --prefix=$HOME/wb/version/$VERSION/wineversion/$VERSION/usr/ >&1
 	then {
 		echo "Configure failed, aborting ..." 1>&2
 		cd ..
@@ -130,7 +132,8 @@ function webVersionList
 {
 	unsetProxy
 	wget -O/dev/null ftp://ibiblio.org/pub/linux/system/emulators/wine/ --no-remove-listing -q
-	cat .listing | awk '{print $9}' | grep wine | grep -v ".sign" |  grep -v ".diff" | sed 's/$//'  > /tmp/wineVersionList
+	cat .listing | awk '{print $9}' | grep wine | grep -v ".sign" |  grep -v ".diff" | sed 's/
+$//'  > /tmp/wineVersionList
 	rm -f .listing
 }
 function localVersionList
