@@ -1,0 +1,36 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+- -- WINE BUILD 
+
+Information when exporting
+Change to be made in the script
+When exporting you have to change in lib_build function setProxy to your current proxy setting.
+If no proxy call unsetProxy in setProxy
+
+The directory /build/wine should exist, you can made an access with a symlink to your $HOME/whatyouwant/ 
+All files must be into /build/wine/
+
+This script is intented to be run into a VM (eg: VBox). In this case a mount point using nfs is used into the VM to mount /build/ to host:/home/build/
+
+A directory is created during compilation into the $HOME that run the script, this directory will be automaticly deleted when finished
+
+when everything is ended a .pol is placed into version/ 
+
+NEVER CREATE THE FILE /build/wine/patch ! NEVER! If you create this one, firstly I will kill you, secondly you will get lot of strange bug, thirdly I will shame you! Fourthly you will made lot of strange problems when script will try to sync with pol server
+
+
+
+Install all lib requested by this page: http://wiki.winehq.org/Recommended_Packages
+
+
+Any question should be directly asked to MulX / APLU <os2mule <at> gmail.com> 
+
+2010-08-25 14:30
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+
+iD8DBQFMdQ07xJahRVskZuERAtqGAJ437FQW/ElEfF9JV0YYmMhSLJ45nQCffaYV
+ZZ19jEznXfEP6cjZDjnEsVk=
+=UQ9B
+-----END PGP SIGNATURE-----
