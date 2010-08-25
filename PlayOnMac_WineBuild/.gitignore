@@ -1,0 +1,20 @@
+*.build.out
+*.sign
+*.bz2
+*.pol
+*.pol.*
+
+#ignoring .cache -- auto generated
+.cache
+
+#ignoring .lsm
+*.lsm
+
+#ignore *.out
+*.out
+
+#ignore patchAllowed.lst
+patchAllowed.lst
+
+#ignore patchRequest.lst -- downloaded daily from website
+patchRequest.lst
