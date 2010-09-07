@@ -28,8 +28,27 @@ do
 	;;
 	esac
 done
-echo "Changing dir to '$SOURCEDIR'"
+echo "Chdir to '$SOURCEDIR'"
 cd "$SOURCEDIR"
 echo "Sauvegarde dans '$TEMPLATE'"
-xgettext -L Shell -F -o $TEMPLATE $(find bash -type f ) $(find lib -type f ) playonlinux*
-xgettext -L Python -F -j --copyright-holder="PlayOnLinux Team" --package-name=PlayOnLinux --msgid-bugs-address="MulX <os2mule@gmail.com>" -o $TEMPLATE $(find python/ -type f ! -iname "*.pyc" )
+cat << EOF > $TEMPLATE
+# PlayOnLinux translation template
+# Copyright (C) 2007-2010 PlayOnLinux Team
+# This file is distributed under the same license as the PACKAGE package.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PlayOnLinux\n"
+"Report-Msgid-Bugs-To: MulX <os2mule@gmail.com>\n"
+"POT-Creation-Date: $(date --rfc-3339=second)\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+EOF
+xgettext -L Shell -F -j --omit-header --foreign-user -o $TEMPLATE $(find bash -type f ) $(find lib -type f ) playonlinux*
+xgettext -L Python -F -j --omit-header --foreign-user -o $TEMPLATE $(find python/ -type f ! -iname "*.pyc" )
