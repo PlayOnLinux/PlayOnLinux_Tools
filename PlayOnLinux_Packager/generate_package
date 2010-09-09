@@ -3,6 +3,7 @@
 VERSION=$1
 DIRNAME="base"
 DIRECTORY="$HOME/git/$DIRNAME"
+GITDIRECTORY="$HOME/git/PlayOnLinux.git" #utilisé pour le dossier git current
 FINAL="$HOME/www/script_files/PlayOnLinux"
 
 if [ "$VERSION" = "" ]
@@ -26,19 +27,39 @@ Maintainer: Tinou
 Description: PlayOnLinux is a front-end for wine. It permits you to install Windows Games and softwares on Linux.
 EOF
 
-# Cloning GIT
-echo "Cloning GIT"
-cd "$DIRECTORY/usr/share"
-git clone git://github.com/PlayOnLinux/PlayOnLinux_3.git
-mv PlayOnLinux_3 playonlinux
-cd playonlinux 
-rm .gitignore
-rm -rf .git
+#mise à jour du git
+mkdir -p "$GITDIRECTORY"
+cd "$GITDIRECTORY"
+if [ ! -d .git ]
+then
+	echo "This isn't a git directory, initializing..."
+	#dossier pour identifier un git
+	mkdir .git
+	#fichier qui contient le strict minimum pour git init
+	cat << EOF > .git/config
+[remote "origin"]
+	fetch = +refs/heads/*:refs/remotes/origin/*
+	url = git@github.com:PlayOnLinux/PlayOnLinux_3.git
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+EOF
+	#on laisse git finir l'init
+	git init
+fi
+#télécharge les maj depuis le dernier git pull
+#rmq: is aucun télécharge tout est dl depuis le début
+git pull
 
 # Making .tar.gz
 echo "Making PlayOnLinux_$VERSION.tar.gz generic package"
+fakeroot git archive --format=tar --prefix=playonlinux/ $VERSION | gzip> $DIRECTORY/usr/share/PlayOnLinux_$VERSION.tar.gz
 cd "$DIRECTORY/usr/share"
-fakeroot tar -czvf PlayOnLinux_$VERSION.tar.gz playonlinux > /dev/null
+
+#supprime l'ancien dossier playonlinux -- au cas où
+rm -rf $DIRECTORY/usr/share/playonlinux
+#extraction pour dpkg-deb
+tar xf PlayOnLinux_$VERSION.tar.gz
 
 # Moving .tar.gz
 echo "Moving PlayOnLinux_$VERSION.tar.gz"
