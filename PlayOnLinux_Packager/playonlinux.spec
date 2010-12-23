@@ -1,15 +1,5 @@
-#!/bin/bash
-#version=$(wget http://www.playonlinux.com/script_files/version.php -O-)
-version="$1"
-[ "$1" = "" ] && echo "Quelle version ?" && exit 1
-
-cd "$HOME/www/script_files/PlayOnLinux/$version/"
-
-fakeroot alien --to-rpm -g -c PlayOnLinux_$version.deb
-cd playonlinux-$version
-cat << EOF > playonlinux.spec
 Name: playonlinux
-Version: $version
+Version: 
 Summary: PlayOnLinux is a front-end for wine. It permits you to install Windows Games and softwares on Linux.
 License: see /usr/share/doc/playonlinux/copyright
 BuildArch:noarch
@@ -18,8 +8,8 @@ Distribution: Fedora
 Group: PlayOnLinux
 URL:http://www.playonlinux.com/
 VenDor:PlayOnLinux
-Packager:PlayOnLinux Packaging <packages@playonlinux.com>
-Buildroot: $(dirname $PWD)/playonlinux-$version
+Packager:MulX <os2mule@gmail.com>
+Buildroot: /Users/Tinou/Documents/GIT/PlayOnLinux_Tools/playonlinux-
 Requires:unzip, wine, wget, xterm, python > 2.4 ,wxPython, bash, ImageMagick, cabextract,  gettext
 
 %define _rpmdir ../
@@ -34,8 +24,3 @@ games on your Linux Distro.
 %dir "/"
 %dir "/usr/"
 /usr/*
-EOF
-rpmbuild -bb playonlinux.spec
-cd ..
-rpm --addsign *.rpm
-rm -r playonlinux-$version
