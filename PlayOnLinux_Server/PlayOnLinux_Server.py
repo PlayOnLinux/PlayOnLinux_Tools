@@ -14,7 +14,9 @@ class MyHandler(BaseHTTPRequestHandler):
         try:
 	    if(self.uri[0] == '/V3_data/repository/get_file.php'):
 		self.script = string.split(self.uri[1],'=')
-		f = open("/tmp/POLServer/V3_data/scripts/" + self.script[1])
+		self.script[2] = self.script[2].replace("%20"," ")
+		f = open("/tmp/POLServer/V3_data/scripts/" + self.script[2])
+		print "Getting "+self.script[2]
 		self.send_response(200)
                 self.send_header('Content-type','text/plain')
                 self.end_headers()
@@ -119,8 +121,12 @@ except:
 	print("Error! Exiting.")
 	sys.exit()
 
-shutil.copy("VERSION","/tmp/POLServer/version2.php")
-
+try:
+	shutil.copy("VERSION","/tmp/POLServer/version2.php")
+	shutil.copy("VERSION_MAC","/tmp/POLServer/version_mac.php")
+except:
+	pass
+	
 for filename in os.listdir('.'):
 	if(os.path.isdir('./'+filename) and idcat(filename) != -1):
 		print " + Adding "+filename+" ["+str(idcat(filename))+"]"
