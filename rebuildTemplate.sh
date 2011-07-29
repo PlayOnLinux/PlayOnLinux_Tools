@@ -33,7 +33,7 @@ cd "$SOURCEDIR"
 echo "Sauvegarde dans '$TEMPLATE'"
 cat << EOF > $TEMPLATE
 # PlayOnLinux translation template
-# Copyright (C) 2007-2010 PlayOnLinux Team
+# Copyright (C) 2007-2011 PlayOnLinux Team
 # This file is distributed under the same license as the PlayOnLiux package.
 #
 #, fuzzy
@@ -50,9 +50,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 EOF
-#genre pour les fichiers shell
-xgettext -L Shell -F -j --omit-header --foreign-user -o $TEMPLATE $(find bash -type f ) $(find lib -type f ) playonlinux*
-#pareil pour python
-xgettext -L Python -F -j --omit-header --foreign-user -o $TEMPLATE $(find python/ -type f ! -iname "*.pyc" )
+tempory=$(mktemp)
 #inclure les trads des plugins
 [ -f plugins/pot.strings ] && cat plugins/pot.strings >> $TEMPLATE
+#genere pour les fichiers shell
+xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) playonlinux*
+#pareil pour python
+xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" )
+cat $tempory >> $TEMPLATE
+rm "$tempory"
