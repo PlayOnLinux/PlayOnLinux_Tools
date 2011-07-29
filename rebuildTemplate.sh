@@ -58,4 +58,5 @@ xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -ty
 #pareil pour python
 xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" )
 cat $tempory >> $TEMPLATE
+msgfmt -c $TEMPLATE -o /dev/null
 rm "$tempory"
