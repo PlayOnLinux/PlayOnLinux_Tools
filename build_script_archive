@@ -1,0 +1,114 @@
+#!/bin/bash
+DIRECTORY=/home/tinou/PlayOnLinuxScripts
+SITE=http://repository.playonlinux.com
+TODAY=$(date +%Y%m%d)
+VERSION=$(wget $SITE/version2.php -O- -q 2> /dev/null)
+VERSION_MAC=$(wget $SITE/version_mac.php -O- -q 2> /dev/null)
+
+whatis()
+{
+        if [ "$1" == 0 ]
+        then
+                echo "Other"
+        fi
+	if [ "$1" == 1 ]
+	then
+		echo "Games"
+	fi 
+        if [ "$1" == 2 ]
+        then
+                echo "Accessories"
+        fi
+        if [ "$1" == 3 ]
+        then
+                echo "Office"
+        fi
+        if [ "$1" == 4 ]
+        then
+                echo "Internet"
+        fi
+        if [ "$1" == 5 ]
+        then
+                echo "Multimedia"
+        fi
+        if [ "$1" == 6 ]
+        then
+                echo "Graphics"
+        fi
+        if [ "$1" == 7 ]
+        then
+                echo "Development"
+        fi
+        if [ "$1" == 8 ]
+        then
+                echo "Education"
+        fi
+        if [ "$1" == 9 ]
+        then
+                echo "Patches"
+        fi
+        if [ "$1" == 10 ]
+        then
+                echo "Testing"
+        fi
+        if [ "$1" == 100 ]
+        then
+                echo "Functions"
+        fi
+}
+process()
+{
+	read line
+	while [ "$line" != "" ]
+	do	
+		file=$(echo "$line" | cut -d "/" -f 2)
+                cat=$(echo "$line" | cut -d "/" -f 1)
+		rcat=$(whatis $cat)
+		echo "Adding $file"
+		mkdir -p "$DIRECTORY/$rcat"
+		wget -q "$SITE/V3_data/repository/get_file.php?id=$file" -O- 2> /dev/null > "$DIRECTORY/$rcat/$file"
+		read line
+	done 
+}
+
+rm -r $DIRECTORY
+mkdir -p $DIRECTORY
+cd $DIRECTORY
+
+echo "Writting version : $VERSION"
+echo $VERSION > VERSION
+echo "Writting mac : $VERSION_MAC"
+printf $VERSION_MAC > VERSION_MAC
+
+echo "Dating archive : $TODAY"
+echo $TODAY > DATE
+
+echo "Building directories"
+mkdir -p Games
+mkdir -p Accessories
+mkdir -p Development
+mkdir -p Education
+mkdir -p Functions
+mkdir -p Games
+mkdir -p Graphics
+mkdir -p Internet
+mkdir -p Multimedia
+mkdir -p Office
+mkdir -p Other
+mkdir -p Patches
+mkdir -p Testing
+
+echo "Downloading all scripts from MySQL ..."
+wget -q $SITE/V3_data/repository/get_local.php -O- 2> /dev/null |  process
+
+
+
+echo "Building .tar.gz file"
+cd $DIRECTORY
+cd ..
+tar -czvf PlayOnLinux_Scripts.tar.gz PlayOnLinuxData  
+
+echo "Copying .tar.gz file"
+cp PlayOnLinux_Scripts.tar.gz ../www/script_files/
+
+echo "Done"
