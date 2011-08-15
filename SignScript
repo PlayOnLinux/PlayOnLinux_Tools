@@ -1,0 +1,6 @@
+#!/bin/bash
+gpg --detach-sign --default-key AA13CA47 -a "$1"
+cp "$1" "$1.signed"
+cat "$1.asc" >> "$1.signed"
+rm "$1.asc"
+echo "Signed"

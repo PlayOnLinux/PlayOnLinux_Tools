@@ -1,6 +1,12 @@
 #!/bin/bash
 
 VERSION=$1
+
+if [ "$VERSION" = "" ]
+then
+	echo "You must specify a version"
+	exit
+fi
 DIRNAME="base"
 DIRECTORY="$HOME/git/$DIRNAME"
 GITDIRECTORY="$HOME/git/PlayOnLinux.git" #utilisé pour le dossier git current
@@ -22,8 +28,8 @@ Version: $VERSION
 Section: base
 Priority: optional
 Architecture: all
-Depends: unzip, wine, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
-Maintainer: Tinou 
+Depends: unzip, wine | wine-stable | wine-unstable, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
+Maintainer: PlayOnLinux Packaging <packages@playonlinux.com> 
 Description: PlayOnLinux is a front-end for wine. It permits you to install Windows Games and softwares on Linux.
 EOF
 
@@ -87,8 +93,13 @@ rm "$DIRECTORY/DEBIAN/control"
 rm -rf "$DIRECTORY/usr/share/playonlinux"
 rm "$DIRECTORY/usr/share/doc/playonlinux/changelog.gz"
 
+# Making rpm
+echo "Building rpm"
+cd $HOME/bin
+./generate_rpm "$VERSION"
 # Updating website 
 echo "$VERSION" > "$HOME/www/script_files/version.php"
 
 echo ""
 echo "PlayOnLinux $VERSION is now available ! Don't forget to run make_repository"
+

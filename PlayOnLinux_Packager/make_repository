@@ -6,6 +6,9 @@ mk_repository()
 	# 3 : Distribution version
 
 echo "Building repository for $2 $3 ..."	
+
+if [ "$(cat $HOME/www/deb/conf/distributions|grep $2)" = "" ]
+then
 cat << FIN >> $HOME/www/deb/conf/distributions
 Origin: PlayOnLinux
 Label: PoL
@@ -18,8 +21,9 @@ Description: PlayOnLinux permits you to install windows applications on linux th
 SignWith: C4676186
 
 FIN
-
+fi
 	reprepro --ignore=undefinedtarget -b $HOME/www/deb includedeb $2 $1
+
 #	reprepro -b $HOME/www/deb includedeb $2 $1
 # Building .list files
 cat << EOF > $HOME/www/deb/playonlinux_$2.list
@@ -49,10 +53,18 @@ echo "PlayOnLinux version : $VERSION"
 
 mkdir -p incoming
 cp $HOME/www/script_files/PlayOnLinux/$VERSION/PlayOnLinux_$VERSION.deb ./incoming
+cd $HOME/bin
+echo "Stable : $1"
+echo "Unstable : $2"
+./generate_wine_package $1 wine-stable
+./generate_wine_package $2 wine-unstable
+
 cd $HOME/www/deb
 
-DEB_FILE="incoming/PlayOnLinux_$VERSION.deb"
+DEBFILES="incoming/PlayOnLinux_$VERSION.deb incoming/wine-$1.deb incoming/wine-$2.deb"
 
+for DEB_FILE in $DEBFILES #"incoming/PlayOnLinux_$VERSION.deb"
+do
 # Ubuntu
 mk_repository "$DEB_FILE" "lucid" "10.04"
 mk_repository "$DEB_FILE" "hardy" "8.04"
@@ -60,8 +72,16 @@ mk_repository "$DEB_FILE" "intrepid" "8.10"
 mk_repository "$DEB_FILE" "jaunty" "9.04"
 mk_repository "$DEB_FILE" "karmic" "9.10"
 mk_repository "$DEB_FILE" "maverick" "10.10"
+mk_repository "$DEB_FILE" "natty" "11.04"
 
 # Debian
 mk_repository "$DEB_FILE" "etch" "4.0"
 mk_repository "$DEB_FILE" "lenny" "5.0"
 mk_repository "$DEB_FILE" "squeeze" "6.0"
+done
+
+## Maintenant on s'occupe des rpm
+echo "RPM"
+cd $HOME/www/rpm/fedora/yum/base/
+cp $HOME/www/script_files/PlayOnLinux/$VERSION/PlayOnLinux_${VERSION}_fedora0.rpm ./
+createrepo .
