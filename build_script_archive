@@ -108,7 +108,7 @@ cd $DIRECTORY
 cd ..
 tar -czvf PlayOnLinux_Scripts.tar.gz PlayOnLinuxData  
 
-echo "Copying .tar.gz file"
-cp PlayOnLinux_Scripts.tar.gz ../www/script_files/
+#echo "Copying .tar.gz file"
+#cp PlayOnLinux_Scripts.tar.gz ../www/script_files/
 
 echo "Done"
