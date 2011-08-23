@@ -48,40 +48,43 @@ rm -rf db
 rm -rf pool
 rm -rf dists
 
-VERSION=`wget -q -O- version http://www.playonlinux.com/script_files/version.php`
+#VERSION=`wget -q -O- version http://www.playonlinux.com/script_files/version.php`
+VERSION="4.0" #Fixme
 echo "PlayOnLinux version : $VERSION"
 
 mkdir -p incoming
-cp $HOME/www/script_files/PlayOnLinux/$VERSION/PlayOnLinux_$VERSION.deb ./incoming
+cp $HOME/www/PlayOnLinux/$VERSION/PlayOnLinux_$VERSION.deb ./incoming
 cd $HOME/bin
-echo "Stable : $1"
-echo "Unstable : $2"
-./generate_wine_package $1 wine-stable
-./generate_wine_package $2 wine-unstable
+#echo "Stable : $1"
+#echo "Unstable : $2"
+#./generate_wine_package $1 wine-stable
+#./generate_wine_package $2 wine-unstable
 
 cd $HOME/www/deb
 
-DEBFILES="incoming/PlayOnLinux_$VERSION.deb incoming/wine-$1.deb incoming/wine-$2.deb"
+#DEBFILES="incoming/PlayOnLinux_$VERSION.deb incoming/wine-$1.deb incoming/wine-$2.deb"
+DEBFILES="incoming/PlayOnLinux_$VERSION.deb"
 
 for DEB_FILE in $DEBFILES #"incoming/PlayOnLinux_$VERSION.deb"
 do
 # Ubuntu
 mk_repository "$DEB_FILE" "lucid" "10.04"
-mk_repository "$DEB_FILE" "hardy" "8.04"
-mk_repository "$DEB_FILE" "intrepid" "8.10"
-mk_repository "$DEB_FILE" "jaunty" "9.04"
-mk_repository "$DEB_FILE" "karmic" "9.10"
+#mk_repository "$DEB_FILE" "hardy" "8.04"
+#mk_repository "$DEB_FILE" "intrepid" "8.10"
+#mk_repository "$DEB_FILE" "jaunty" "9.04"
+#mk_repository "$DEB_FILE" "karmic" "9.10"
 mk_repository "$DEB_FILE" "maverick" "10.10"
 mk_repository "$DEB_FILE" "natty" "11.04"
 
 # Debian
-mk_repository "$DEB_FILE" "etch" "4.0"
-mk_repository "$DEB_FILE" "lenny" "5.0"
+# mk_repository "$DEB_FILE" "etch" "4.0"
+# mk_repository "$DEB_FILE" "lenny" "5.0"
 mk_repository "$DEB_FILE" "squeeze" "6.0"
 done
 
 ## Maintenant on s'occupe des rpm
 echo "RPM"
+mkdir -p $HOME/www/rpm/fedora/yum/base/
 cd $HOME/www/rpm/fedora/yum/base/
-cp $HOME/www/script_files/PlayOnLinux/$VERSION/PlayOnLinux_${VERSION}_fedora0.rpm ./
+cp $HOME/www/PlayOnLinux/$VERSION/PlayOnLinux_${VERSION}_fedora0.rpm ./
 createrepo .

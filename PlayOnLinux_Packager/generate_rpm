@@ -3,8 +3,7 @@
 version="$1"
 [ "$1" = "" ] && echo "Quelle version ?" && exit 1
 
-cd "$HOME/www/script_files/PlayOnLinux/$version/"
-
+cd $FINAL/$version/
 fakeroot alien --to-rpm -g -c PlayOnLinux_$version.deb
 cd playonlinux-$version
 cat << EOF > playonlinux.spec
@@ -19,7 +18,7 @@ Group: PlayOnLinux
 URL:http://www.playonlinux.com/
 VenDor:PlayOnLinux
 Packager:PlayOnLinux Packaging <packages@playonlinux.com>
-Buildroot: $(dirname $PWD)/playonlinux-$version
+Buildroot: /home/tinou/www/PlayOnLinux/$version/playonlinux-$version
 Requires:unzip, wine, wget, xterm, python > 2.4 ,wxPython, bash, ImageMagick, cabextract,  gettext
 
 %define _rpmdir ../
@@ -35,8 +34,13 @@ games on your Linux Distro.
 %dir "/usr/"
 /usr/*
 EOF
+## FIXME 
+mkdir -p /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
+cp -r usr /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
 rpmbuild -bb playonlinux.spec
-cd ..
+
+cd $FINAL/$version/
 rpm --addsign *.rpm
+
 rm -r playonlinux-$version
 rm playonlinux.spec

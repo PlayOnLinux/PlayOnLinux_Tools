@@ -1,5 +1,5 @@
 #!/bin/bash
-DIRECTORY=/home/tinou/PlayOnLinuxScripts
+DIRECTORY=/home/tinou/PlayOnLinux_Scripts
 SITE=http://repository.playonlinux.com
 TODAY=$(date +%Y%m%d)
 VERSION=$(wget $SITE/version2.php -O- -q 2> /dev/null)
@@ -66,7 +66,7 @@ process()
 		rcat=$(whatis $cat)
 		echo "Adding $file"
 		mkdir -p "$DIRECTORY/$rcat"
-		wget -q "$SITE/V3_data/repository/get_file.php?id=$file" -O- 2> /dev/null > "$DIRECTORY/$rcat/$file"
+		wget -q "$SITE/V4_data/repository/get_file.php?id=$file" -O- 2> /dev/null > "$DIRECTORY/$rcat/$file"
 		read line
 	done 
 }
@@ -99,14 +99,14 @@ mkdir -p Patches
 mkdir -p Testing
 
 echo "Downloading all scripts from MySQL ..."
-wget -q $SITE/V3_data/repository/get_local.php -O- 2> /dev/null |  process
+wget -q $SITE/V4_data/repository/get_local.php -O- 2> /dev/null |  process
 
 
 
-echo "Building .tar.gz file"
-cd $DIRECTORY
-cd ..
-tar -czvf PlayOnLinux_Scripts.tar.gz PlayOnLinuxData  
+#echo "Building .tar.gz file"
+#cd $DIRECTORY
+#cd ..
+#tar -czvf PlayOnLinux_Scripts.tar.gz PlayOnLinuxData  
 
 #echo "Copying .tar.gz file"
 #cp PlayOnLinux_Scripts.tar.gz ../www/script_files/

@@ -10,8 +10,7 @@ fi
 DIRNAME="base"
 DIRECTORY="$HOME/git/$DIRNAME"
 GITDIRECTORY="$HOME/git/PlayOnLinux.git" #utilisé pour le dossier git current
-FINAL="$HOME/www/script_files/PlayOnLinux"
-
+export FINAL="$HOME/www/PlayOnLinux"
 if [ "$VERSION" = "" ]
 then
 	echo "You need to specify a version"
@@ -22,15 +21,19 @@ echo "Building $VERSION from GIT"
 # Generate control file
 echo "Generating control file"
 cd "$DIRECTORY/DEBIAN"
-cat << EOF > control
+cat << EOF > /dev/null # VOir en bas !
 Package: playonlinux
 Version: $VERSION
-Section: base
+Section: misc
 Priority: optional
 Architecture: all
 Depends: unzip, wine | wine-stable | wine-unstable, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
 Maintainer: PlayOnLinux Packaging <packages@playonlinux.com> 
-Description: PlayOnLinux is a front-end for wine. It permits you to install Windows Games and softwares on Linux.
+Description: This program is a front-end for wine. 
+ It permits you to install Windows Games and softwares 
+ on Linux. It allows you to manage differents virtual hard drive, 
+ and several wine versions.
+ Copyright 2011 PlayOnLinux team <contact@playonlinux.com>
 EOF
 
 #mise à jour du git
@@ -45,7 +48,7 @@ then
 	cat << EOF > .git/config
 [remote "origin"]
 	fetch = +refs/heads/*:refs/remotes/origin/*
-	url = git@github.com:PlayOnLinux/PlayOnLinux_3.git
+	url = git@github.com:PlayOnLinux/POL-POM-4.git
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
@@ -59,7 +62,7 @@ git pull
 
 # Making .tar.gz
 echo "Making PlayOnLinux_$VERSION.tar.gz generic package"
-fakeroot git archive --format=tar --prefix=playonlinux/ $VERSION | gzip> $DIRECTORY/usr/share/PlayOnLinux_$VERSION.tar.gz
+fakeroot git archive --format=tar --prefix=playonlinux/ $VERSION | gzip> $DIRECTORY/usr/share/PlayOnLinux_$VERSION.tar.gz || exit 1
 cd "$DIRECTORY/usr/share"
 
 #supprime l'ancien dossier playonlinux -- au cas où
@@ -75,12 +78,35 @@ mv PlayOnLinux_$VERSION.tar.gz "$FINAL/$VERSION"
 # Making changelog
 echo "Updating changelog"
 cp "$DIRECTORY/usr/share/playonlinux/CHANGELOG" "$DIRECTORY/usr/share/doc/playonlinux/changelog"
-gzip "$DIRECTORY/usr/share/doc/playonlinux/changelog"
+gzip -9 "$DIRECTORY/usr/share/doc/playonlinux/changelog"
+rm "$DIRECTORY/usr/share/playonlinux/LICENCE"
+rm "$DIRECTORY/usr/share/playonlinux/.gitignore"
 
-# Making .deb
 echo "Building PlayOnLinux_$VERSION.deb"
 cd "$DIRECTORY"
 cd ..
+installed_size="$(du "$DIRECTORY/usr" | tail -n 1 | awk '{print $1}')"
+
+cd "$DIRECTORY/DEBIAN"
+cat << EOF > control
+Package: playonlinux
+Version: $VERSION
+Section: misc
+Priority: optional
+Installed-Size: $installed_size
+Architecture: all
+Depends: unzip, wine | wine-stable | wine-unstable, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
+Maintainer: PlayOnLinux Packaging <packages@playonlinux.com>
+Description: This program is a front-end for wine.
+ It permits you to install Windows Games and softwares
+ on Linux. It allows you to manage differents virtual hard drive,
+ and several wine versions.
+ Copyright 2011 PlayOnLinux team <contact@playonlinux.com>
+EOF
+
+cd "$DIRECTORY"
+cd ..
+
 fakeroot dpkg-deb --build $DIRNAME
 
 # Moving .deb
@@ -95,11 +121,10 @@ rm "$DIRECTORY/usr/share/doc/playonlinux/changelog.gz"
 
 # Making rpm
 echo "Building rpm"
-cd $HOME/bin
+cd $HOME/PlayOnLinux_Tools/PlayOnLinux_Packager
 ./generate_rpm "$VERSION"
 # Updating website 
-echo "$VERSION" > "$HOME/www/script_files/version.php"
+# echo "$VERSION" > "$HOME/www/script_files/version.php"
 
 echo ""
 echo "PlayOnLinux $VERSION is now available ! Don't forget to run make_repository"
-
