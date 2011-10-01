@@ -54,7 +54,8 @@ tempory=$(mktemp)
 #inclure les trads des plugins
 [ -f plugins/pot.strings ] && cat plugins/pot.strings >> $TEMPLATE
 #genere pour les fichiers shell
-xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) playonlinux*
+
+xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) $(find PlayOnLinux_Scripts -type f ) playonlinux*
 #pareil pour python
 xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" )
 cat $tempory >> $TEMPLATE
