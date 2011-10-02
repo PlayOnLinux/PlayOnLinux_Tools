@@ -9,6 +9,8 @@ source ui.sh
 
 [ "$1" == "--nocolor" ] && shift && no_color
 
+[ "$1" == "--polsc" ] && shift && polsc
+
 file="$1"
 shift
 

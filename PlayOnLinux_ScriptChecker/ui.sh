@@ -77,6 +77,44 @@ export bakcyn=''   # Cyan
 export bakwht=''   # White
 export txtrst=''    # Text Reset
 }
+
+polsc()
+{
+export txtblk='<span foreground="#000000">' # Black - Regular
+export txtred='<span foreground="#FF0000">' # Red
+export txtgrn='<span foreground="#008000">' # Green
+export txtylw='<span foreground="#FF8000">' # Yellow
+export txtblu='<span foreground="#0000C0">' # Blue
+export txtpur='<span foreground="#800080">' # Purple
+export txtcyn='<span foreground="#00FFFF">' # Cyan
+export txtwht='<span foreground="#FFFFFF">' # White
+export bldblk='<span foreground="#000000" weight="bold">' # Black - Bold
+export bldred='<span foreground="#FF0000" weight="bold">' # Red
+export bldgrn='<span foreground="#008000" weight="bold">' # Green
+export bldylw='<span foreground="#FF8000" weight="bold">' # Yellow
+export bldblu='<span foreground="#0000C0" weight="bold">' # Blue
+export bldpur='<span foreground="#800080" weight="bold">' # Purple
+export bldcyn='<span foreground="#00FFFF" weight="bold">' # Cyan
+export bldwht='<span foreground="#FFFFFF" weight="bold">' # White
+export unkblk='<span foreground="#000000" underline="single">' # Black - Underline
+export undred='<span foreground="#FF0000" underline="single">' # Red
+export undgrn='<span foreground="#008000" underline="single">' # Green
+export undylw='<span foreground="#FF8000" underline="single">' # Yellow
+export undblu='<span foreground="#0000C0" underline="single">' # Blue
+export undpur='<span foreground="#800080" underline="single">' # Purple
+export undcyn='<span foreground="#00FFFF" underline="single">' # Cyan
+export undwht='<span foreground="#FFFFFF" underline="single">' # White
+export bakblk='<span background="#000000">'   # Black - Background
+export bakred='<span background="#FF0000">'   # Red
+export badgrn='<span background="#008000">'   # Green
+export bakylw='<span background="#FFFF00">'   # Yellow
+export bakblu='<span background="#0000C0">'   # Blue
+export bakpur='<span background="#800080">'   # Purple
+export bakcyn='<span background="#00FFFF">'   # Cyan
+export bakwht='<span background="#FFFFFF">'   # White
+export txtrst='</span>'    # Text Reset
+}
+
 s_echo ()
 {
 	printf "$1" 
