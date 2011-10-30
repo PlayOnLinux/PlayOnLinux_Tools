@@ -376,7 +376,7 @@ check_source_pol
 check_programfiles_dur
 check_init_close
 check_wineprefix_selectprefix
-check_download
+# check_download # Cause some problem ; disabled for the moment
 echo ""
 
 [ "$errors" = "true" ] && exit 2
