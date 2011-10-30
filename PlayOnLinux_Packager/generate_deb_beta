@@ -1,30 +1,37 @@
 #!/bin/bash
 
-VERSION=$1
-
-if [ "$VERSION" = "" ]
-then
-	echo "You must specify a version"
-	exit
-fi
 DIRNAME="base"
 DIRECTORY="$HOME/git/$DIRNAME"
 GITDIRECTORY="$HOME/git/PlayOnLinux.git" #utilisé pour le dossier git current
-export FINAL="$HOME/www/PlayOnLinux"
-if [ "$VERSION" = "" ]
-then
-	echo "You need to specify a version"
-	exit	
-fi
+cd "$GITDIRECTORY"
+git pull
+
+export FINAL="$HOME/PlayOnLinux-beta/files"
+mkdir -p "$FINAL" 
+cd "$GITDIRECTORY/python/lib"
+VERSION="$(cat Variables.py | grep "VERSION" | grep "] = " | cut -d \" -f4)"
+export VERSION="${VERSION/-dev/}"
+echo "Version detected: $VERSION"
+mkdir -p "$HOME/.polpackager/increments"
+cur_file="$HOME/.polpackager/increments/$VERSION"
+touch "$cur_file"
+
+ver=$(cat "$cur_file")
+ver=$((ver+1))
+[ "$ver" = "0" ] && ver=$((ver+1))
+echo -n $ver > "$cur_file"
+export ver
+echo "Increment : $ver"
+
 echo "Welcome to PlayOnLinux builder script"
 echo "Building $VERSION from GIT"
 # Generate control file
 echo "Generating control file"
 cd "$DIRECTORY/DEBIAN"
 cat << EOF > /dev/null # VOir en bas !
-Package: playonlinux
-Conflicts: playonlinux-beta
-Version: $VERSION
+Package: playonlinux-beta
+Conflicts: playonlinux
+Version: $VERSION-$ver
 Section: misc
 Priority: optional
 Architecture: all
@@ -62,19 +69,19 @@ fi
 git pull
 
 # Making .tar.gz
-echo "Making PlayOnLinux_$VERSION.tar.gz generic package"
-fakeroot git archive --format=tar --prefix=playonlinux/ $VERSION | gzip> $DIRECTORY/usr/share/PlayOnLinux_$VERSION.tar.gz || exit 1
+echo "Making PlayOnLinux_$VERSION-$ver.tar.gz generic package"
+fakeroot git archive --format=tar --prefix=playonlinux/ HEAD | gzip> $DIRECTORY/usr/share/PlayOnLinux-beta_$VERSION-$ver.tar.gz || exit 1
 cd "$DIRECTORY/usr/share"
 
 #supprime l'ancien dossier playonlinux -- au cas où
 rm -rf $DIRECTORY/usr/share/playonlinux
 #extraction pour dpkg-deb
-tar xf PlayOnLinux_$VERSION.tar.gz
+tar xf PlayOnLinux-beta_$VERSION-$ver.tar.gz
 
 # Moving .tar.gz
-echo "Moving PlayOnLinux_$VERSION.tar.gz"
-mkdir -p $FINAL/$VERSION
-mv PlayOnLinux_$VERSION.tar.gz "$FINAL/$VERSION"
+echo "Moving PlayOnLinux_$VERSION-$ver.tar.gz"
+mkdir -p $FINAL/$VERSION-$ver
+mv PlayOnLinux-beta_$VERSION-$ver.tar.gz "$FINAL/$VERSION-$ver"
 
 # Making changelog
 echo "Updating changelog"
@@ -83,16 +90,16 @@ gzip -9 "$DIRECTORY/usr/share/doc/playonlinux/changelog"
 rm "$DIRECTORY/usr/share/playonlinux/LICENCE"
 rm "$DIRECTORY/usr/share/playonlinux/.gitignore"
 
-echo "Building PlayOnLinux_$VERSION.deb"
+echo "Building PlayOnLinux_$VERSION-$ver.deb"
 cd "$DIRECTORY"
 cd ..
 installed_size="$(du "$DIRECTORY/usr" | tail -n 1 | awk '{print $1}')"
 
 cd "$DIRECTORY/DEBIAN"
 cat << EOF > control
-Package: playonlinux
-Conflicts: playonlinux-beta
-Version: $VERSION
+Package: playonlinux-beta
+Conflicts: playonlinux
+Version: $VERSION-$ver
 Section: misc
 Priority: optional
 Installed-Size: $installed_size
@@ -113,7 +120,7 @@ fakeroot dpkg-deb --build $DIRNAME
 
 # Moving .deb
 echo "Moving deb"
-mv $DIRNAME.deb "$FINAL/$VERSION/PlayOnLinux_$VERSION.deb"
+mv $DIRNAME.deb "$FINAL/$VERSION-$ver/PlayOnLinux-beta_$VERSION-$ver.deb"
 
 # Cleaning
 echo "Cleaning"
@@ -121,12 +128,5 @@ rm "$DIRECTORY/DEBIAN/control"
 rm -rf "$DIRECTORY/usr/share/playonlinux"
 rm "$DIRECTORY/usr/share/doc/playonlinux/changelog.gz"
 
-# Making rpm
-echo "Building rpm"
-cd $HOME/PlayOnLinux_Tools/PlayOnLinux_Packager
-./generate_rpm "$VERSION"
-# Updating website 
-# echo "$VERSION" > "$HOME/www/script_files/version.php"
-
-echo ""
-echo "PlayOnLinux $VERSION is now available ! Don't forget to run make_repository"
+cd "$HOME/PlayOnLinux_Tools/PlayOnLinux_Packager"
+bash make_repository_beta

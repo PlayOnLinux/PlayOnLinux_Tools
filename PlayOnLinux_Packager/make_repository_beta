@@ -1,0 +1,82 @@
+#!/bin/bash
+if [ "$VERSION" = "" ]
+then
+	echo "Unknown version"
+	bash generate_deb_beta
+	exit
+
+fi
+mk_repository()
+{
+	# 1 : Deb file
+	# 2 : Distribution
+	# 3 : Distribution version
+
+echo "Building repository for $2 $3 ..."	
+
+if [ "$(cat $HOME/PlayOnLinux-beta/deb/conf/distributions|grep $2)" = "" ]
+then
+cat << FIN >> $HOME/PlayOnLinux-beta/deb/conf/distributions
+Origin: PlayOnLinux
+Label: PoL
+Suite: $2
+Codename: $2
+Version: $3
+Architectures: i386 amd64
+Components: main
+Description: PlayOnLinux permits you to install windows applications on linux thanks to wine - Visit : http://www.playonlinux.com/
+SignWith: C4676186
+
+FIN
+fi
+	reprepro --ignore=undefinedtarget -b $HOME/PlayOnLinux-beta/deb includedeb $2 $1
+
+# Building .list files
+cat << EOF > $HOME/PlayOnLinux-beta/deb/playonlinux_$2.list
+deb http://beta.playonlinux.com/ $2 main
+EOF
+}
+
+
+mkdir -p $HOME/PlayOnLinux-beta/deb/incoming
+mkdir -p $HOME/PlayOnLinux-beta/deb/conf
+
+if [ -e "$HOME/PlayOnLinux-beta/deb/conf/distributions" ]
+then
+	rm $HOME/PlayOnLinux-beta/deb/conf/distributions
+	touch $HOME/PlayOnLinux-beta/deb/conf/distributions
+fi
+
+echo "Cleaning"
+cd $HOME/PlayOnLinux-beta/deb
+rm -rf incoming
+rm -rf db
+rm -rf pool
+rm -rf dists
+
+echo "PlayOnLinux version : $VERSION"
+
+mkdir -p incoming
+cp $HOME/PlayOnLinux-beta/files/$VERSION-$ver/PlayOnLinux-beta_$VERSION-$ver.deb ./incoming
+cd $HOME/PlayOnLinux-beta/deb
+
+#DEBFILES="incoming/PlayOnLinux_$VERSION.deb incoming/wine-$1.deb incoming/wine-$2.deb"
+DEBFILES="incoming/PlayOnLinux-beta_$VERSION-$ver.deb"
+
+for DEB_FILE in $DEBFILES #"incoming/PlayOnLinux_$VERSION.deb"
+do
+# Ubuntu
+mk_repository "$DEB_FILE" "lucid" "10.04"
+#mk_repository "$DEB_FILE" "hardy" "8.04"
+#mk_repository "$DEB_FILE" "intrepid" "8.10"
+#mk_repository "$DEB_FILE" "jaunty" "9.04"
+#mk_repository "$DEB_FILE" "karmic" "9.10"
+mk_repository "$DEB_FILE" "maverick" "10.10"
+mk_repository "$DEB_FILE" "natty" "11.04"
+
+# Debian
+# mk_repository "$DEB_FILE" "etch" "4.0"
+# mk_repository "$DEB_FILE" "lenny" "5.0"
+mk_repository "$DEB_FILE" "squeeze" "6.0"
+done
+
