@@ -33,7 +33,7 @@ fi
 
 # Building .list files
 cat << EOF > $HOME/PlayOnLinux-beta/deb/playonlinux_$2.list
-deb http://beta.playonlinux.com/ $2 main
+deb http://beta.playonlinux.com/deb/ $2 main
 EOF
 }
 
@@ -65,18 +65,19 @@ DEBFILES="incoming/PlayOnLinux-beta_$VERSION-$ver.deb"
 
 for DEB_FILE in $DEBFILES #"incoming/PlayOnLinux_$VERSION.deb"
 do
+mk_repository "$DEB_FILE" "testing" "testing"
 # Ubuntu
-mk_repository "$DEB_FILE" "lucid" "10.04"
+#mk_repository "$DEB_FILE" "lucid" "10.04"
 #mk_repository "$DEB_FILE" "hardy" "8.04"
 #mk_repository "$DEB_FILE" "intrepid" "8.10"
 #mk_repository "$DEB_FILE" "jaunty" "9.04"
 #mk_repository "$DEB_FILE" "karmic" "9.10"
-mk_repository "$DEB_FILE" "maverick" "10.10"
-mk_repository "$DEB_FILE" "natty" "11.04"
+#mk_repository "$DEB_FILE" "maverick" "10.10"
+#mk_repository "$DEB_FILE" "natty" "11.04"
 
 # Debian
 # mk_repository "$DEB_FILE" "etch" "4.0"
 # mk_repository "$DEB_FILE" "lenny" "5.0"
-mk_repository "$DEB_FILE" "squeeze" "6.0"
+#mk_repository "$DEB_FILE" "squeeze" "6.0"
 done
 
