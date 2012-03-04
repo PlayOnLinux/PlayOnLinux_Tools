@@ -55,9 +55,9 @@ tempory=$(mktemp)
 [ -f plugins/pot.strings ] && cat plugins/pot.strings >> $TEMPLATE
 #genere pour les fichiers shell
 
-xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) $(find PlayOnLinux_Scripts -type f ) playonlinux*
+xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) $(find PlayOnLinux_Scripts -type f ) playonlinux* || exit 255
 #pareil pour python
-xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" )
+xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" ) || exit 255
 cat $tempory >> $TEMPLATE
 msgfmt -c $TEMPLATE -o /dev/null || exit 1
 #cp $tempory $HOME
