@@ -37,8 +37,10 @@ EOF
 ## FIXME 
 mkdir -p /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
 cp -r usr /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
-rpmbuild -bb playonlinux.spec
+rpmbuild  -bb playonlinux.spec --nodeps 
 
+
+echo "Fini rpmbuild"
 cd $FINAL/$version/
 rpm --addsign *.rpm
 
