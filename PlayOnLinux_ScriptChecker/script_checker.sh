@@ -568,10 +568,10 @@ check_dll_override_pol_call
 check_rm_top_left
 check_old_modif_registry
 check_fonts_smooth_rgb
-check_comments_accents
+#check_comments_accents
 check_bad_messages_gettext
 check_short_prefix_name
-check_var_prefix_exist
+#check_var_prefix_exist
 check_xgettext_ok
 check_eval_gettext_double_quote
 check_mmdevapi_override

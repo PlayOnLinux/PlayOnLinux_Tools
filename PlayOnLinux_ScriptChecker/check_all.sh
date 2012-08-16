@@ -1,4 +1,6 @@
 #!/bin/bash
+
+"$HOME/bin/add_scripts"
 source ui.sh
 
 mkdir -p $HOME/www/scripts/details
@@ -27,6 +29,10 @@ do
 		[ "$code" = "0" ] && s_ok
 		[ "$code" = "1" ] && s_war
 		[ "$code" = "2" ] && s_err
+		wget "http://www.playonlinux.com/api/script_state.php?i=$ele6&s=$(( code + 1 ))" -O- -q > /dev/null
+		pdata="$(cat "$HOME/www/scripts/details/$ele6.txt")"
+		pdata="c=$(POL_Website_urlparse "$pdata")"
+		wget "http://www.playonlinux.com/api/script_statewhy.php?i=$ele6" --post-data="$pdata" -O- -q > /dev/null
 	fi
 	IFS="$newifs"
 

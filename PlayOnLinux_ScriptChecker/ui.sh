@@ -1,5 +1,18 @@
 #!/bin/bash
 
+POL_Website_urlparse()
+{
+        # Parse a value to put it in a url
+        # Usage: POL_Website_urlparse [strings]
+
+        # & %26
+        # = %3D
+        chars="$1"
+        chars="${chars//"&"/\%26}"
+        chars="${chars//"="/%3D}"
+        echo "$chars"
+}
+
 ## Script checker for PlayOnLinux
 # 
 #
