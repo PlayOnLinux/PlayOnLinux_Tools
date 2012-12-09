@@ -84,6 +84,9 @@ check_title()
 	if [ "$ScriptChecker_Title" = "" ]
 	then
 		s_err 5
+	elif [ "$ScriptChecker_Title" != "$(basename $file)" ]
+	then
+		s_err 5 "`$ScriptChecker_Title' doesn't match script name"
 	else
 		s_ok 5 "$ScriptChecker_Title"
 	fi
