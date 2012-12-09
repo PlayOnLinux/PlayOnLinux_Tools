@@ -1,7 +1,6 @@
 #!/bin/bash
 
 VERSION=$1
-
 if [ "$VERSION" = "" ]
 then
 	echo "You must specify a version"
@@ -24,11 +23,11 @@ cd "$DIRECTORY/DEBIAN"
 cat << EOF > /dev/null # VOir en bas !
 Package: playonlinux
 Conflicts: playonlinux-beta
-Version: $VERSION
+Version: $VERSION$REVISION
 Section: misc
 Priority: optional
 Architecture: all
-Depends: unzip, wine | wine-stable | wine-unstable, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils
+Depends: unzip, wine | wine-stable | wine-unstable, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils, p7zip-full
 Maintainer: PlayOnLinux Packaging <packages@playonlinux.com> 
 Description: This program is a front-end for wine. 
  It permits you to install Windows Games and softwares 
@@ -92,7 +91,7 @@ cd "$DIRECTORY/DEBIAN"
 cat << EOF > control
 Package: playonlinux
 Conflicts: playonlinux-beta
-Version: $VERSION
+Version: $VERSION$REVISION
 Section: misc
 Priority: optional
 Installed-Size: $installed_size
