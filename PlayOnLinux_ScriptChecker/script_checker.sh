@@ -123,6 +123,16 @@ check_mifs ()
                 s_err 2
         fi
 }
+check_setid ()
+{
+        s_echo "Checking POL_SetupWindow_SetID presence"
+        if [ "$(cat /tmp/script | grep POL_SetupWindow_SetID)" = "" ]
+        then
+                s_war 2
+        else
+                s_ok 2
+        fi
+}
 check_debug ()
 {
         s_echo "Checking POL_Debug_Init presence"
@@ -548,6 +558,7 @@ check_deprecated
 check_exit
 check_scale
 check_mifs
+check_setid
 check_debug
 check_winetricks 
 check_old_programfiles
