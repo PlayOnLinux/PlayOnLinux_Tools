@@ -1,0 +1,69 @@
+#!/bin/bash
+export LC_ALL=C
+function mms ()
+{
+        #echo "PRIVMSG #playonlinux-staff :[SyncTrad] ($(date "+%F %S")) $@" > /tmp/ircexec
+	#sleep 2s
+        echo "[SyncTrad] ($(date "+%F %S")) $@"
+}
+
+function abort ()
+{
+        rm -rf $WORKDIR/working
+        exit $1
+}
+WORKDIR=/home/playonlinux/launchpad/
+POLGIT=/home/playonlinux/git/PlayOnLinux.git
+rm -rf $WORKDIR/working
+mkdir -p $WORKDIR/working
+cd $WORKDIR
+mms "Fetching new files from Bazaar"
+cd $WORKDIR/POL-Translation
+bzr pull || abort 1
+cp -av lang/po $WORKDIR/working
+cd $WORKDIR/working/
+mkdir -p $WORKDIR/working/thx/
+mms "Computing locales"
+for LCPO in po/*.po
+do
+        LCNAME=$(basename $LCPO .po)
+        mms "  --> Processing $LCNAME"
+        wget https://translations.launchpad.net/playonlinux/arietis/+pots/pol/${LCNAME}/+details --no-check-certificate -q -O- | grep "sprite person" | sed -e 's_<br />__g' > $WORKDIR/working/thx/$LCNAME.raw
+        mkdir -p locale/$LCNAME/LC_MESSAGES/
+        msgfmt -o locale/$LCNAME/LC_MESSAGES/pol.mo $LCPO
+done
+
+mms "Updating git to last commit"
+cd $POLGIT
+git pull || abort 2
+cd $WORKDIR/working
+mms "Updating translation thx"
+cp -v $POLGIT/TRANSLATORS ./thx/TRANSLATION
+find $WORKDIR/working/thx/ -empty -print -delete
+for fic in thx/*.raw
+do
+        #rewriting html lines into something clear like NAME from https://launchpad.net/~nickname
+        sed -e 's_.*https.*~\(.*\)" .*.>\(.*\)<.*_\2 from https://launchpad.net/~\1_g' $fic >> $WORKDIR/working/thx/Launchpad
+done
+
+#recupère l'entête
+head -n`awk '/^---/ {print NR ; exit 0; }' $WORKDIR/working/thx/TRANSLATION` $WORKDIR/working/thx/TRANSLATION > $WORKDIR/working/thx/TRANSLATORS
+sort -u $WORKDIR/working/thx/Launchpad >> $WORKDIR/working/thx/TRANSLATORS
+
+cd $POLGIT
+mms "Removing old locales"
+rm -vrf lang/locale
+rm -vf lang/*.po
+
+mms "Copying new locales"
+mv -v $WORKDIR/working/locale lang/
+mv -v $WORKDIR/working/po/*.po lang/po/
+mv -v $WORKDIR/working/thx/TRANSLATORS .
+
+mms "Commiting and pushing"
+git add lang || abort 3
+git add TRANSLATORS || abort 3
+git commit -m "Updated translation from Launchpad" --author='Petit Aymeric / MulX <os2mule@gmail.com>' || abort 4 
+git push || abort 5
+
+mms "Finished"
