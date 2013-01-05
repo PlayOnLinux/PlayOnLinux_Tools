@@ -1,0 +1,73 @@
+#!/bin/bash
+function sms ()
+{
+	echo $@
+}
+function setlock()
+{
+	echo $$ > $HOME/lock
+	sms "Lock set, enjoy"
+	return
+}
+function lock ()
+{
+	#si lock n'existe pas, le créer puis rendre la main
+	test ! -f $HOME/lock && setlock && return
+	#le fichier existe
+	lockPID=$(cat $HOME/lock)
+	sms "System locked by $lockPID, checking"
+	if [ $lockPID -eq $$ ]
+	then
+		echo "What are you doing? Your lock is already set..."
+		return
+	fi
+	#verification du pid utilise 
+	ps uhp $lockPID >/dev/null
+	ret=$?
+	if [ $ret -ne 0 ]
+	then
+		#process not running, lock
+		setlock
+		return
+	fi
+	#est ce quon doit attendre
+	if [ "x$1" != "x--wait" ]
+	then
+		sms "Still running and nowait. Exiting."
+		exit
+	else
+	#loop
+		ps uhp $lockPID >/dev/null
+		ret=$?
+		while [ $ret -eq 0 ]
+		do
+			sleepTime=$(($RANDOM%4+8))
+			sms "Waiting $sleepTime seconds for pid $lockPID."
+			sleep $sleepTime
+			ps uhp $lockPID >/dev/null
+			ret=$?
+		done
+		setlock
+	fi
+
+}
+
+function waitlock ()
+{
+	lock --wait	
+}
+function unlock ()
+{
+	lockPID=$(cat $HOME/lock)
+	if [ $lockPID -ne $$ ]
+	then
+		sms "refusing to unlock other task"
+		return
+	fi
+	rm $HOME/lock
+}
+function forceunlock ()
+{
+	sms "/!\ Forcing unlock !"
+	rm $HOME/lock
+}
