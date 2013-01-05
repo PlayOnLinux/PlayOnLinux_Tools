@@ -1,5 +1,7 @@
 #!/bin/bash
 export LC_ALL=C
+. $HOME/lib/lockProcedure
+waitlock
 function mms ()
 {
         #echo "PRIVMSG #playonlinux-staff :[SyncTrad] ($(date "+%F %S")) $@" > /tmp/ircexec
@@ -67,3 +69,4 @@ git commit -m "Updated translation from Launchpad" --author='Petit Aymeric / Mul
 git push || abort 5
 
 mms "Finished"
+unlock
