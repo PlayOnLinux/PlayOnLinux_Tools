@@ -9,7 +9,7 @@ fi
 DIRNAME="base"
 DIRECTORY="$HOME/git/$DIRNAME"
 GITDIRECTORY="$HOME/git/PlayOnLinux.git" #utilisé pour le dossier git current
-export FINAL="$HOME/www/PlayOnLinux"
+export FINAL="$HOME/Packages"
 if [ "$VERSION" = "" ]
 then
 	echo "You need to specify a version"
