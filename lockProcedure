@@ -36,7 +36,7 @@ function lock ()
 		sms "Still running and nowait. Exiting."
 		exit
 	else
-	#loop
+	#loop (waitlock)
 		ps uhp $lockPID >/dev/null
 		ret=$?
 		while [ $ret -eq 0 ]
@@ -44,6 +44,8 @@ function lock ()
 			sleepTime=$(($RANDOM%4+8))
 			sms "Waiting $sleepTime seconds for pid $lockPID."
 			sleep $sleepTime
+			#re-read lock if there is two waitlock in the same time
+			test -f $HOME/lock && lockPID=$(cat $HOME/lock)
 			ps uhp $lockPID >/dev/null
 			ret=$?
 		done
