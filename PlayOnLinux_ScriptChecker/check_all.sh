@@ -6,7 +6,7 @@ source ui.sh
 mkdir -p $HOME/www/scripts/details
 no_color
 
-list="$(find /home/tinou/PlayOnLinux_Scripts/)"
+list="$(find $HOME/PlayOnLinux_Scripts/)"
 oldifs="$IFS"
 newifs="
 "
@@ -19,7 +19,7 @@ do
         ele6="$(echo $elem | cut -d"/" -f6)"
 	ntab=$(calctab "$ele6")
 
-	if [ -d "/home/tinou/PlayOnLinux_Scripts/$ele5" ] && [ ! "$ele5" = "" ] && [ ! "$ele6" = "" ]
+	if [ -d "$HOME/PlayOnLinux_Scripts/$ele5" ] && [ ! "$ele5" = "" ] && [ ! "$ele6" = "" ]
 	then
 	        s_echo "$ele6"	
 		rm "$HOME/www/scripts/details/$ele6.txt" 2> /dev/null
