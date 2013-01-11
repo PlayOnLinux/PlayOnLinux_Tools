@@ -1,5 +1,5 @@
 #!/bin/bash
-DIRECTORY=/home/tinou/PlayOnLinux_Scripts
+DIRECTORY="$HOME/PlayOnLinux_Scripts"
 SITE=http://repository.playonlinux.com
 TODAY=$(date +%Y%m%d)
 VERSION=$(wget $SITE/version2.php -O- -q 2> /dev/null)
