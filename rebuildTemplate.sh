@@ -40,7 +40,7 @@ cat << EOF > $TEMPLATE
 msgid ""
 msgstr ""
 "Project-Id-Version: PlayOnLinux\n"
-"Report-Msgid-Bugs-To: MulX <os2mule@gmail.com>\n"
+"Report-Msgid-Bugs-To: MulX/APLU <pol-gettext@mulx.net>\n"
 "POT-Creation-Date: $(date --rfc-3339=second)\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
@@ -55,9 +55,9 @@ tempory=$(mktemp)
 [ -f plugins/pot.strings ] && cat plugins/pot.strings >> $TEMPLATE
 #genere pour les fichiers shell
 
-xgettext -L Shell -F -j --omit-header --foreign-user -o $tempory $(find bash -type f ) $(find lib -type f ) $(find PlayOnLinux_Scripts -type f ) playonlinux* || exit 255
+xgettext -L Shell -F -j --omit-header --foreign-user --from-code=utf-8 -o $tempory $(find bash -type f ) $(find lib -type f ) $(find PlayOnLinux_Scripts -type f ) playonlinux* || exit 255
 #pareil pour python
-xgettext -L Python -F -j --omit-header --foreign-user -o $tempory $(find python/ -type f ! -iname "*.pyc" ) || exit 255
+xgettext -L Python -F -j --omit-header --foreign-user --from-code=utf-8 -o $tempory $(find python/ -type f ! -iname "*.pyc" ) || exit 255
 cat $tempory >> $TEMPLATE
 msgfmt -c $TEMPLATE -o /dev/null || exit 1
 #cp $tempory $HOME
