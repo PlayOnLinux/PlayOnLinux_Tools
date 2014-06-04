@@ -65,7 +65,7 @@ mv -v $WORKDIR/working/thx/TRANSLATORS .
 mms "Commiting and pushing"
 git add lang || abort 3
 git add TRANSLATORS || abort 3
-git commit -m "Updated translation from Launchpad" --author='Petit Aymeric / MulX <os2mule@gmail.com>' || abort 4 
+git commit -m "Updated translation from Launchpad" --author='Aymeric / APLU <mulx@aplu.fr>' || abort 4 
 git push || abort 5
 
 mms "Finished"
