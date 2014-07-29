@@ -37,6 +37,7 @@ done
 
 mms "Updating git to last commit"
 cd $POLGIT
+git branch master
 git pull || abort 2
 cd $WORKDIR/working
 mms "Updating translation thx"
