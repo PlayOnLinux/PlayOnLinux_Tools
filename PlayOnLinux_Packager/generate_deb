@@ -27,7 +27,7 @@ Version: $VERSION$REVISION
 Section: misc
 Priority: optional
 Architecture: all
-Depends: unzip, wine | wine-stable | wine-unstable | wine:i386 | wine-stable:i386 | wine-unstable:i386, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils, p7zip-full
+Depends: unzip, wget, xterm | x-terminal-emulator, python, python-wxgtk2.8 | python-wxgtk3.0, imagemagick, cabextract, icoutils, p7zip-full, curl
 Maintainer: PlayOnLinux Packaging <packages@playonlinux.com> 
 Description: This program is a front-end for wine. 
  It permits you to install Windows Games and softwares 
@@ -96,7 +96,7 @@ Section: misc
 Priority: optional
 Installed-Size: $installed_size
 Architecture: all
-Depends: unzip, wine | wine-stable | wine-unstable | wine:i386 | wine-stable:i386 | wine-unstable:i386, wget, xterm, python, python-wxgtk2.8, imagemagick, cabextract, icoutils, p7zip-full
+Depends: unzip, wget, xterm | x-terminal-emulator, python, python-wxgtk2.8 | python-wxgtk3.0, imagemagick, cabextract, icoutils, p7zip-full, curl
 Maintainer: PlayOnLinux Packaging <packages@playonlinux.com>
 Description: This program is a front-end for wine.
  It permits you to install Windows Games and softwares

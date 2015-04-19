@@ -2,7 +2,7 @@
 #version=$(wget http://www.playonlinux.com/script_files/version.php -O-)
 version="$1"
 [ "$1" = "" ] && echo "Quelle version ?" && exit 1
-
+export FINAL=$HOME/Packages
 cd $FINAL/$version/
 fakeroot alien --to-rpm -g -c PlayOnLinux_$version.deb
 cd playonlinux-$version
@@ -18,27 +18,40 @@ Group: PlayOnLinux
 URL:http://www.playonlinux.com/
 VenDor:PlayOnLinux
 Packager:PlayOnLinux Packaging <packages@playonlinux.com>
-Buildroot: /home/tinou/www/PlayOnLinux/$version/playonlinux-$version
+Buildroot: /home/playonlinux/Packages/$version/playonlinux-$version
 Requires:unzip, wine, wget, xterm, python > 2.4 ,wxPython, bash, ImageMagick, cabextract,  gettext, redhat-lsb, p7zip, p7zip-plugins, icoutils
 
 %define _rpmdir ../
-%define _rpmfilename PlayOnLinux_%%{VERSION}_%%{RELEASE}.rpm
+%define _rpmfilename PlayOnLinux_%%{VERSION}.rpm
 %define _unpackaged_files_terminate_build 0
 %global _binaries_in_noarch_packages_terminate_build 0
 
 %description
-PlayOnLinux is able to install Windows
-games on your Linux Distro.
+It permits you to install Windows Games and softwares
+on Linux. It allows you to manage differents virtual hard drive,
+and several wine versions.
+Copyright 2007-2013 PlayOnLinux team <contact@playonlinux.com>
+
+%install 
+mkdir -p %{buildroot}
+cp -av /home/playonlinux/Packages/$version/playonlinux-$version/usr %{buildroot}
+ls -l %{buildroot}
 
 %files
 %defattr(-,root,root)
-%dir "/"
-%dir "/usr/"
-/usr/*
+%dir "/usr/share/playonlinux/"
+/usr/share/playonlinux/*
+/usr/share/applications/*
+%dir "/usr/share/doc/playonlinux"
+/usr/share/doc/playonlinux/*
+/usr/share/gconf/schemas/*
+/usr/share/man/man1/*
+/usr/share/pixmaps/*
+/usr/bin/*
 EOF
 ## FIXME 
-mkdir -p /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
-cp -r usr /home/tinou/rpmbuild/BUILDROOT/playonlinux-$version-fedora0.x86_64
+#mkdir -p /home/playonlinux/rpmbuild/BUILDROOT/playonlinux-$version-fedora0
+#cp -r usr /home/playonlinux/rpmbuild/BUILDROOT/playonlinux-$version-fedora0
 rpmbuild  -bb playonlinux.spec --nodeps 
 
 
@@ -47,4 +60,5 @@ cd $FINAL/$version/
 rpm --addsign *.rpm
 
 rm -r playonlinux-$version
+exit
 rm playonlinux.spec
